@@ -71,6 +71,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--image-input", type=str, required=True)
+    parser.add_argument("--object-name", type=str, default=None)
     parser.add_argument("--output-path", type=str, default="./output.glb")
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--num-inference-steps", type=int, default=50)
@@ -90,7 +91,7 @@ if __name__ == "__main__":
 
     # init tripoSG pipeline
     pipe: TripoSGPipeline = TripoSGPipeline.from_pretrained(triposg_weights_dir).to(device, dtype)
-
+    output_path = os.path.join(args.output_path, f"{args.object_name}.glb")
     # run inference
     run_triposg(
         pipe,
@@ -100,5 +101,5 @@ if __name__ == "__main__":
         num_inference_steps=args.num_inference_steps,
         guidance_scale=args.guidance_scale,
         faces=args.faces,
-    ).export(args.output_path)
-    print(f"Mesh saved to {args.output_path}")
+    ).export(output_path)
+    print(f"Mesh saved to {output_path}")
